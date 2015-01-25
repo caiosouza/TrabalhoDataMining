@@ -56,5 +56,6 @@ public class Example {
 			System.out.println("StemO: "+stO.getWordStem(line));
 			
 		}	
+		s.close();
 	}
 }

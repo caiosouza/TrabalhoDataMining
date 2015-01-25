@@ -6,18 +6,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import ufrj.coppe.entities.KeyWords;
 import ufrj.coppe.entities.ResultadoFinal;
 import ufrj.coppe.entities.ResultadoSearch;
 import ufrj.coppe.execs.TestaKeywords;
+import ufrj.coppe.utils.ArquivoUtils;
 
 public class TopKWords {
 
+	private static final String TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS = "\nTestes buscando nos arquivos pre-processados (Stemme + StopWords) :\n";
+	private static final String RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS = "\nResultados para keywords com Stemme + stopwords:\n";
+	private static final String RESULTADOS_PARA_KEYWORDS_ORIGINAIS = "Resultados para keywords Originais\n";
+	private static final String TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS = "Testes buscando nos arquivos originais:\n";
 	private static String pastaRaiz = "/Users/admin/Documents/workspace/";
-	private static File indexStemmed = new File(pastaRaiz + "LuceneIntroProject/indexAmostra1kpreProssed/");
-	private static File indexOriginal = new File(pastaRaiz + "LuceneIntroProject/indexAmostra1kOriginal/");
+	private static File indexStemmed = new File(pastaRaiz + "TrabalhoDataMining/indexAmostra1kpreProssed/");
+	private static File indexOriginal = new File(pastaRaiz + "TrabalhoDataMining/indexAmostra1kOriginal/");
 	//private static int[] categoriasIndexadas = {1,7,8,9,12,14,15,18,19,63};
 	private static int hitsDefault = 1000;
 	//private static int hitsEsperados = 1000;
@@ -25,14 +29,15 @@ public class TopKWords {
 	public static void main(String[] args) {
 		
 		TopKWords topKWords = new TopKWords();
-		topKWords.exec(args);
+		topKWords.exec();
 	}
 
-	private void exec(String[] args){
-		execBaseline(args);
-		//execBaselineOu(args);
-		//execReduzKeywords(args);
-		//execAmpliaKeywords(args);
+	private void exec(){
+		
+		execBaseline(hitsDefault);
+		execBaselineOu(hitsDefault);
+		execReduzKeywords(hitsDefault);
+		execAmpliaKeywords(hitsDefault);
 		
 	}
 	
@@ -43,101 +48,183 @@ public class TopKWords {
 	    }
 	}
 	
-	private void execAmpliaKeywords(String[] args) {
-		int hits = pegaHits(args);
-		Map<Integer, List<ResultadoSearch>> resultados = new HashMap<Integer, List<ResultadoSearch>>();
-		TestaKeywords  testaKeywords = new TestaKeywords();
-		
-		System.out.println("Testes buscando nos arquivos originais:\n");
-		System.out.println("Resultados para keywords Originais\n");
-		resultados = testaKeywords.ampliaKeywods(hits, indexOriginal, KeyWords.reduzidasOriginais);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));
-		System.out.println("\nResultados para keywords com Stemme + stopwords:\n");
-		resultados = testaKeywords.ampliaKeywods(hits, indexOriginal, KeyWords.reduzidasSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		
-		System.out.println("\nTestes buscando nos arquivos pre-processados (Stemme + StopWords) :\n");
-		System.out.println("Resultados para keywords Originais/n");
-		resultados = testaKeywords.ampliaKeywods(hits, indexStemmed, KeyWords.reduzidasOriginais);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		System.out.println("\nResultados para keywords com Stemme + stopwords:\n");
-		resultados = testaKeywords.ampliaKeywods(hits, indexStemmed, KeyWords.reduzidasSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
+	private void execAmpliaKeywords(int hits) {
 
-	}
-
-	private void execReduzKeywords(String[] args) {
+		String metodoAtual = getNomeMetodoAtual();
+		List<String> linhasResultados = new ArrayList<String>();
+		String nomeArqResultados = "Resultados/"+ metodoAtual+ ".txt";
 		
-		int hits = pegaHits(args);
-		Map<Integer, List<ResultadoSearch>> resultados = new HashMap<Integer, List<ResultadoSearch>>();
-		TestaKeywords  testaKeywords = new TestaKeywords();
-		
-		System.out.println("Testes buscando nos arquivos originais:\n");
-		System.out.println("Resultados para keywords Originais\n");
-		resultados = testaKeywords.reduzKeywods(hits, indexOriginal, KeyWords.originais);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));
-		System.out.println("\nResultados para keywords com Stemme + stopwords:\n");
-		resultados = testaKeywords.reduzKeywods(hits, indexOriginal, KeyWords.originaisSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		
-		System.out.println("\nTestes buscando nos arquivos pre-processados (Stemme + StopWords) :\n");
-		System.out.println("Resultados para keywords Originais/n");
-		resultados = testaKeywords.reduzKeywods(hits, indexStemmed, KeyWords.originais);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		System.out.println("\nResultados para keywords com Stemme + stopwords:\n");
-		resultados = testaKeywords.reduzKeywods(hits, indexStemmed, KeyWords.originaisSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-	}
-
-	private void execBaseline(String [] args){
-		
-		int hits = pegaHits(args);
 		Map<Integer, List<ResultadoSearch>> resultados = new HashMap<Integer, List<ResultadoSearch>>();
 		TestaKeywords testaKeywords = new TestaKeywords();
 		
-		System.out.println("Testes buscando nos arquivos originais:\n");
-		System.out.println("Resultados para keywords Originais\n");
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		
+		resultados = testaKeywords.ampliaKeywods(hits, indexOriginal, KeyWords.reduzidasOriginais);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
+		
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		
+		resultados = testaKeywords.ampliaKeywods(hits, indexOriginal, KeyWords.reduzidasSteme);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
+		
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		
+		resultados = testaKeywords.ampliaKeywods(hits, indexStemmed, KeyWords.reduzidasOriginais);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
+		
+		System.out.println(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		
+		resultados = testaKeywords.ampliaKeywods(hits, indexStemmed, KeyWords.reduzidasSteme);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
+
+		ArquivoUtils arquivo = new ArquivoUtils();
+		arquivo.salvaArquivo(linhasResultados, nomeArqResultados);
+	}
+
+	private void execReduzKeywords(int hits) {
+		
+		String metodoAtual = getNomeMetodoAtual();
+		List<String> linhasResultados = new ArrayList<String>();
+		String nomeArqResultados = "Resultados/"+ metodoAtual+ ".txt";
+		
+		Map<Integer, List<ResultadoSearch>> resultados = new HashMap<Integer, List<ResultadoSearch>>();
+		TestaKeywords testaKeywords = new TestaKeywords();
+		
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		
+		resultados = testaKeywords.reduzKeywods(hits, indexOriginal, KeyWords.originais);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
+		
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		
+		resultados = testaKeywords.reduzKeywods(hits, indexOriginal, KeyWords.originaisSteme);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
+		
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		
+		resultados = testaKeywords.reduzKeywods(hits, indexStemmed, KeyWords.originais);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
+		
+		System.out.println(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		
+		resultados = testaKeywords.reduzKeywods(hits, indexStemmed, KeyWords.originaisSteme);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
+		
+		ArquivoUtils arquivo = new ArquivoUtils();
+		arquivo.salvaArquivo(linhasResultados, nomeArqResultados);
+	}
+
+	/**
+	 * Rodando desta forma, as virgulas sao consideradas e por isso podem ser retornado menos de 1000 documentos.
+	 * Com isso o esses resultados podem ter precision diferente do recall.
+	 * 
+	 * Como nesse trabalho, na primeira etapa o precision estava igual ao recall, certamente nao foi usada essa funcao.
+	 * Por isso que ela foi colocada como deprecated 
+	 * @param hits
+	 */
+	@Deprecated
+	private void execBaseline(int hits){
+		
+		String metodoAtual = getNomeMetodoAtual();
+		List<String> linhasResultados = new ArrayList<String>();
+		String nomeArqResultados = "Resultados/"+ metodoAtual+ ".txt";
+		
+		Map<Integer, List<ResultadoSearch>> resultados = new HashMap<Integer, List<ResultadoSearch>>();
+		TestaKeywords testaKeywords = new TestaKeywords();
+		
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		
 		resultados = testaKeywords.execTeste(hits, indexOriginal, KeyWords.originais);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		System.out.println("\nResultados para keywords com Stemme + stopwords:\n");
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
+		
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		
 		resultados = testaKeywords.execTeste(hits, indexOriginal, KeyWords.originaisSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
 		
-		System.out.println("\nTestes buscando nos arquivos pre-processados (Stemme + StopWords) :\n");
-		//indexDir = new File(indexStemmed);
-		System.out.println("Resultados para keywords Originais/n");
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_ORIGINAIS);
+		
 		resultados = testaKeywords.execTeste(hits, indexStemmed, KeyWords.originais);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		System.out.println("\nResultados para keywords com Stemme + stopwords:\n");
-		resultados = testaKeywords.execTeste(hits, indexStemmed, KeyWords.originaisSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
 		
+		linhasResultados.add(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		System.out.println(RESULTADOS_PARA_KEYWORDS_COM_STEMME_STOPWORDS);
+		
+		resultados = testaKeywords.execTeste(hits, indexStemmed, KeyWords.originaisSteme);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
+		
+		ArquivoUtils arquivo = new ArquivoUtils();
+		arquivo.salvaArquivo(linhasResultados, nomeArqResultados);
+	}
+
+	private String getNomeMetodoAtual() {
+		Throwable thr = new Throwable();  
+		thr.fillInStackTrace();  
+		StackTraceElement[] ste = thr.getStackTrace(); 
+		String metodoAtual = ste[1].getMethodName();
+		return metodoAtual;
 	}
 	
-	private void execBaselineOu(String[] args){
+	private void execBaselineOu(int hits){
 		
-		int hits = pegaHits(args);
+		String metodoAtual = getNomeMetodoAtual();
+		List<String> linhasResultados = new ArrayList<String>();
+		String nomeArqResultados = "Resultados/"+ metodoAtual+ ".txt";
+		
 		Map<Integer, List<ResultadoSearch>> resultados = new HashMap<Integer, List<ResultadoSearch>>();
 		TestaKeywords testaKeywords = new TestaKeywords();
 		
-		System.out.println("Testes buscando nos arquivos originais:\n");
-		//indexDir = new File(indexOriginal);
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
+		linhasResultados.add("Resultados para keywords Originais com OU\n");
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_ORIGINAIS);
 		System.out.println("Resultados para keywords Originais com OU\n");
+		
 		resultados = testaKeywords.execTeste(hits, indexOriginal, KeyWords.originaisOU);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
+
+		linhasResultados.add("\nResultados para keywords com OU + Stemme + stopwords:\n");
 		System.out.println("\nResultados para keywords com OU + Stemme + stopwords:\n");
+		
 		resultados = testaKeywords.execTeste(hits, indexOriginal, KeyWords.originaisOUSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
 		
-		System.out.println("\nTestes buscando nos arquivos pre-processados (Stemme + StopWords) :\n");
-		//indexDir = new File(indexStemmed);
-		System.out.println("Resultados para keywords Originais com OU /n");
+		linhasResultados.add(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		linhasResultados.add("Resultados para keywords Originais com OU \n");
+		System.out.println(TESTES_BUSCANDO_NOS_ARQUIVOS_PRE_PROCESSADOS_STEMME_STOP_WORDS);
+		System.out.println("Resultados para keywords Originais com OU \n");
+		
 		resultados = testaKeywords.execTeste(hits, indexStemmed, KeyWords.originaisOU);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
-		System.out.println("\nResultados para keywords  com OU + Stemme + stopwords:\n");
-		resultados = testaKeywords.execTeste(hits, indexStemmed, KeyWords.originaisOUSteme);
-		ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados));		
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));
 		
+		linhasResultados.add("\nResultados para keywords  com OU + Stemme + stopwords:\n");
+		System.out.println("\nResultados para keywords  com OU + Stemme + stopwords:\n");
+		
+		resultados = testaKeywords.execTeste(hits, indexStemmed, KeyWords.originaisOUSteme);
+		linhasResultados.addAll(ResultadoFinal.imprimiResultadoFinal(sumarizaResultados(resultados)));		
+	
+		ArquivoUtils arquivo = new ArquivoUtils();
+		arquivo.salvaArquivo(linhasResultados, nomeArqResultados);
 	}
 	
 	private List<ResultadoFinal> sumarizaResultados(Map<Integer, List<ResultadoSearch>> resultadosKeywords){
@@ -151,12 +238,12 @@ public class TopKWords {
 		
 		return resultadosFinais;
 	}
-	
-	private int pegaHits(String[] args) {
-		//le o arg [0], se n�o tiver arg 0 pede para o cara digitar e testa se � inteiro
+	/*
+	private int pegaHits() {
 		return hitsDefault;
 	}
-
+	
+	
 	private File pegaPastaIndice(String[] args) {
 		
 		File pastaIndice;
@@ -169,7 +256,7 @@ public class TopKWords {
 			Scanner s = new Scanner(System.in);
 			System.out.println("Entre com o tipo de indice: (0) Original, (1) Stemm+StopWords.");
 			tipo = Integer.parseInt(s.next());
-			
+			s.close();
 		}
 		if (tipo == 0) {
 			pastaIndice = indexOriginal;
@@ -177,5 +264,6 @@ public class TopKWords {
 		
 		return pastaIndice;
 	}
+	*/
 	
 }

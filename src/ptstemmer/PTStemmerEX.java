@@ -54,6 +54,7 @@ public class PTStemmerEX {
 			System.out.println("StemO: "+ execStemming(line, Stemmer.StemmerType.ORENGO));
 			
 		}	
+		s.close();
 	}
 	
 	public String execStemming(String line, StemmerType stype) {

@@ -22,7 +22,7 @@ public class DocumentoRetornado {
 	}
 
 	private int pegaCategoria(String documento) {
-		//C:\Users\caio.souza\Projects\LuceneIntroProject\Amostra1k10cat\Categoria_7\100400000011.txt
+		///Users/admin/Documents/workspace/TrabalhoDataMining/Amostra1k10cat/Categoria_7/100400000011.txt
 		String categoria = documento.substring(documento.indexOf("_")+1, documento.lastIndexOf(File.separator));
 		return Integer.parseInt(categoria);
 	}

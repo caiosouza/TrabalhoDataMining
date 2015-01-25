@@ -43,9 +43,10 @@ public abstract class PTStemmerUtilities {
 			BufferedReader in = new BufferedReader(new FileReader(filename));
 			while((aux=in.readLine())!=null)
 				res.add(aux.trim().toLowerCase());
-
+			in.close();
 		} catch (IOException e) {
 			throw new PTStemmerException("Problems opening file "+filename, e);
+			
 		}
 		return res;
 	}

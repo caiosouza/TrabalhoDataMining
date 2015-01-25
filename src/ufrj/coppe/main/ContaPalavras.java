@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  
 /**
  * classe ContaPalavras - recebe como entrada um arquivo texto, identifica as
- * diferentes palavras e contabiliza as frequências.
+ * diferentes palavras e contabiliza as frequï¿½ncias.
  *
  * uso: java ContaPalavras arquivo_texto
  *
@@ -58,7 +58,7 @@ public class ContaPalavras {
         	Scanner s = new Scanner(System.in);
         	System.out.println("Entre com o nome do arquivo.");
         	nomeArq = s.next();
-        	
+        	s.close();
         }
         else {
         	nomeArq = args[0];
@@ -78,7 +78,7 @@ public class ContaPalavras {
          
         while (curLine != null) {
         	linhas.add(curLine);
-            //pega a próxima linha do arquivo
+            //pega a prï¿½xima linha do arquivo
             curLine = txtBuffer.readLine();
         }
          
@@ -106,30 +106,30 @@ public class ContaPalavras {
         //usado para contabilizar as frequencias das palavras
     	int totalTermos = 0;
     	for (String curLine : linhas) {
-            //quebra a linha em tokens (palavras) utilizando expressão regular.
-            //      O programa usa uma forma simplificada p/ obter os tokens. São considerados tokens:
-            //      - uma sequência de 1 a n números e uma sequência de 1 a n letras
+            //quebra a linha em tokens (palavras) utilizando expressï¿½o regular.
+            //      O programa usa uma forma simplificada p/ obter os tokens. Sï¿½o considerados tokens:
+            //      - uma sequï¿½ncia de 1 a n nï¿½meros e uma sequï¿½ncia de 1 a n letras
  
-            //primeiro converte tudo para minúsculo
+            //primeiro converte tudo para minï¿½sculo
             String minusculo = curLine.toLowerCase();
              
-            //depois aplica a expressão regular
-            //Pattern p = Pattern.compile("(\\d+)|([a-záéíóúçõãôêâà]+)");
-            Pattern p = Pattern.compile("([a-záéíóúçõãôêâà]+)");
+            //depois aplica a expressï¿½o regular
+            //Pattern p = Pattern.compile("(\\d+)|([a-zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
+            Pattern p = Pattern.compile("([a-zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
             //Pattern p = Pattern.compile("(\\d+)|([a-z]+)");
             Matcher m = p.matcher(minusculo);
              
-            //neste loop pegamos cada palavra e atualizamos o mapa de frequências
+            //neste loop pegamos cada palavra e atualizamos o mapa de frequï¿½ncias
             
             while(m.find())
             {
             	String token = m.group(); //pega um token  
-            	Integer freq = mapPalavras.get(token); //verifica se esse token já está no mapa   
+            	Integer freq = mapPalavras.get(token); //verifica se esse token jï¿½ estï¿½ no mapa   
             	totalTermos = totalTermos +1; 
             	if (freq != null) { //se palavra existe, atualiza a frequencia
             		mapPalavras.put(token, freq+1);
                 }
-                else { // se palavra não existe, insiro com um novo id e freq=1.
+                else { // se palavra nï¿½o existe, insiro com um novo id e freq=1.
                     mapPalavras.put(token,1);
                 }
             }
@@ -145,18 +145,18 @@ public class ContaPalavras {
     	Map<String,Integer> mapPalavras = new HashMap<String,Integer>(); 
     	int totalTermos = 0;
     	for (String curLine : linhas) {
-            //quebra a linha em tokens (palavras) utilizando expressão regular.
-            //      O programa usa uma forma simplificada p/ obter os tokens. São considerados tokens:
-            //      - uma sequência de 1 a n números e uma sequência de 1 a n letras
+            //quebra a linha em tokens (palavras) utilizando expressï¿½o regular.
+            //      O programa usa uma forma simplificada p/ obter os tokens. Sï¿½o considerados tokens:
+            //      - uma sequï¿½ncia de 1 a n nï¿½meros e uma sequï¿½ncia de 1 a n letras
  
-            //primeiro converte tudo para minúsculo
+            //primeiro converte tudo para minï¿½sculo
             String minusculo = curLine.toLowerCase();
              
-            Pattern p = Pattern.compile("([a-záéíóúçõãôêâà]+)");
+            Pattern p = Pattern.compile("([a-zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+)");
             //Pattern p = Pattern.compile("([a-z]+)");
             Matcher m = p.matcher(minusculo);
              
-            //neste loop pegamos cada palavra e atualizamos o mapa de frequências
+            //neste loop pegamos cada palavra e atualizamos o mapa de frequï¿½ncias
             
             while(m.find())
             {
@@ -171,22 +171,22 @@ public class ContaPalavras {
     }
     
     public String trata (String passa){  
-        passa = passa.replaceAll("[ÂÀÁÄÃ]","A");  
-        passa = passa.replaceAll("[âãàáä]","a");  
-        passa = passa.replaceAll("[ÊÈÉË]","E");  
-        passa = passa.replaceAll("[êèéë]","e");  
-        passa = passa.replaceAll("ÎÍÌÏ","I");  
-        passa = passa.replaceAll("îíìï","i");  
-        passa = passa.replaceAll("[ÔÕÒÓÖ]","O");  
-        passa = passa.replaceAll("[ôõòóö]","o");  
-        passa = passa.replaceAll("[ÛÙÚÜ]","U");  
-        passa = passa.replaceAll("[ûúùü]","u");  
-        passa = passa.replaceAll("Ç","C");  
-        passa = passa.replaceAll("ç","c");   
-        passa = passa.replaceAll("[ýÿ]","y");  
-        passa = passa.replaceAll("Ý","Y");  
-        passa = passa.replaceAll("ñ","n");  
-        passa = passa.replaceAll("Ñ","N");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½ï¿½]","A");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½ï¿½]","a");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½]","E");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½]","e");  
+        passa = passa.replaceAll("ï¿½ï¿½ï¿½ï¿½","I");  
+        passa = passa.replaceAll("ï¿½ï¿½ï¿½ï¿½","i");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½ï¿½]","O");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½ï¿½]","o");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½]","U");  
+        passa = passa.replaceAll("[ï¿½ï¿½ï¿½ï¿½]","u");  
+        passa = passa.replaceAll("ï¿½","C");  
+        passa = passa.replaceAll("ï¿½","c");   
+        passa = passa.replaceAll("[ï¿½ï¿½]","y");  
+        passa = passa.replaceAll("ï¿½","Y");  
+        passa = passa.replaceAll("ï¿½","n");  
+        passa = passa.replaceAll("ï¿½","N");  
         return passa;  
     }  
     
@@ -210,14 +210,14 @@ public class ContaPalavras {
 			for (Map.Entry<String, Integer> entry : termoFrequenciaDocumento.entrySet()) {
 				String termo = entry.getKey();
 				int freqDoc = entry.getValue();
-				//verifica se ela está no mapa da categoria
+				//verifica se ela estï¿½ no mapa da categoria
 				if (termoFrequenciaCategoria.containsKey(termo))
 				{
 					//se estiver atualiza o valor com a soma dos valores
 					int freqCategoria = termoFrequenciaCategoria.get(termo);
 					termoFrequenciaCategoria.put(termo, freqCategoria+ freqDoc);
 				} else {
-					//se não estiver adiciona com o valor do documento
+					//se nï¿½o estiver adiciona com o valor do documento
 					termoFrequenciaCategoria.put(termo, freqDoc);
 				}
 			}

@@ -9,7 +9,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.Set;
 
 import ufrj.coppe.entities.DocFrequencia;
@@ -41,9 +40,9 @@ public class AlgBayesiano {
 
 	private void exec(String[] args) {
 
-		System.out.println("Entre com o nome do Diretório a ser treinado");
+		System.out.println("Entre com o nome do Diretï¿½rio a ser treinado");
 		
-		Scanner scanner = new Scanner(System.in);
+		//Scanner scanner = new Scanner(System.in);
 		//String nomeDiretorio = scanner.next();//"data/teste";
 		String nomeDiretorio = args[0];
 		File diretorio = new File(nomeDiretorio);

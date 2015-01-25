@@ -33,7 +33,7 @@ public class AmostraArquivos {
 		System.out.println("Entre com a pasta destino para salvar:");
 		Scanner s = new Scanner(System.in);
 		String pastaDestino = s.next();
-		
+		s.close();
 		ArquivoUtils arquivoUtils = new ArquivoUtils(); 
 		for (File arquivoOriginal : arquivos) {
 			String nomeArquivoNovo = arquivoOriginal.getPath().replace(diretorioRaiz, pastaDestino);
@@ -75,7 +75,7 @@ public class AmostraArquivos {
 			arquivos = pegaSubpastas(rootPath, numArquivos);
 			
 		}
-		
+		s.close();
 		salvaArquivos(arquivos, rootPath);
 			
 		
@@ -99,7 +99,7 @@ public class AmostraArquivos {
 		Scanner s = new Scanner(System.in);
 		pastas = s.next().split(",");
 		numPastas = new int[pastas.length];
-		
+		s.close();
 		for (int i = 0; i < pastas.length; i++) {
 			numPastas[i] = validaNArquivos(pastas[i]);
 		}

@@ -60,9 +60,12 @@ public class SimpleSearcher {
 			Document d = searcher.doc(docId);
 			DocumentoRetornado documentoRetornado = new DocumentoRetornado(d.get("filename"), hits[i].score);
 			documentosRetornados.add(documentoRetornado);
+			
 		}
-		
+
 		ResultadoSearch resultadoSearch = new ResultadoSearch(queryStr, documentosRetornados, hits.length);
+		searcher.close();
+		directory.close();
 		return resultadoSearch;
 		
 	}

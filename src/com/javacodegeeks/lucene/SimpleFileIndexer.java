@@ -13,11 +13,14 @@ import org.apache.lucene.store.FSDirectory;
 
 public class SimpleFileIndexer {
 	
-	private static String pastaRaiz = "C:/Users/caio.souza/Projects/";
-	private static String indexStemmed = pastaRaiz + "LuceneIntroProject/indexStemmed/";
-	private static String indexOriginal = pastaRaiz + "LuceneIntroProject/indexOrigial/";
-	private static String pathStemmed = pastaRaiz + "DSP/data/preProssed/";
-	private static String pathOriginal = pastaRaiz + "DSP/data/txts/";
+	private static String pastaRaiz = "/Users/admin/Documents/workspace/";
+	private static String indexStemmed = pastaRaiz + "TrabalhoDataMining/indexAmostra1kpreProssed/";
+	private static String indexOriginal = pastaRaiz + "TrabalhoDataMining/indexAmostra1kOriginal/";
+	//private static String pathStemmed = pastaRaiz + "DSP/data/preProssed/";
+	//private static String pathOriginal = pastaRaiz + "DSP/data/txts/";
+	private static String pathStemmed = pastaRaiz + "TrabalhoDataMining/Amostra1kOriginal/";
+	private static String pathOriginal = pastaRaiz + "TrabalhoDataMining/Amostra1kpreProssed/";
+
 	
 	public static void main(String[] args) throws Exception {
 
@@ -43,7 +46,6 @@ public class SimpleFileIndexer {
 			System.out.println("Erro ao gerar o indice.");
 			e.printStackTrace();
 		}
-		
 		System.out.println("Total files indexed " + numIndex);
 		
 	}
@@ -52,6 +54,7 @@ public class SimpleFileIndexer {
 		
 		System.out.println("Entre com a pasta dos dados:");
 		String nomePasta;
+		//se o primeiro argumento da funcao for 0 usa o original, se for usa o preprocessado
 		if (args.length > 0 ){
 			int nOptPasta = Integer.parseInt(args[0]);
 			if (nOptPasta == 1) nomePasta = pathStemmed;
@@ -59,6 +62,7 @@ public class SimpleFileIndexer {
 		} else {
 			Scanner s = new Scanner(System.in);
 			nomePasta = s.next();
+			s.close();
 		}
 		File pastaDados = new File (nomePasta); 
 		
@@ -69,6 +73,7 @@ public class SimpleFileIndexer {
 	
 		System.out.println("Entre com a pasta do indice:");
 		String nomePasta;
+		//se o primeiro argumento da funcao for 0 usa o original, se for usa o preprocessado
 		if (args.length > 0 ){
 			int nOptPasta = Integer.parseInt(args[0]);
 			if (nOptPasta == 1) nomePasta = indexStemmed;
@@ -76,6 +81,7 @@ public class SimpleFileIndexer {
 		} else {
 			Scanner s = new Scanner(System.in);
 			nomePasta = s.next();
+			s.close();
 		}
 		File pastaIndice = new File (nomePasta); 
 		

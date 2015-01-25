@@ -80,27 +80,38 @@ public class ResultadoFinal {
 		this.mediaRecall = mediaRecall;
 	}
 
-	public static void imprimiResultadoFinal(List<ResultadoFinal> resultadosFinais) {
+	public static List<String> imprimiResultadoFinal(List<ResultadoFinal> resultadosFinais) {
+		
+		List<String> resultados = new ArrayList<String>();
 		
 		List<String> keywords = new ArrayList<String>();
+		String medidasCategoria;
 		DecimalFormat decimal = new DecimalFormat( "0.0000" );  
 		for (ResultadoFinal resultadoFinal : resultadosFinais) {
-			System.out.println("Categoria "+ resultadoFinal.getCategoria()+
+			
+			medidasCategoria = "Categoria "+ resultadoFinal.getCategoria()+
 			": Media f1: "+ decimal.format(resultadoFinal.getMediaf1())+
 			": Media Precision: "+ decimal.format(resultadoFinal.getMediaPrecision())+
 			": Media Recall: "+ decimal.format(resultadoFinal.getMediaRecall())+
 			": Media CG: "+ decimal.format(resultadoFinal.getMediaCG())+
 			": Media DCG: "+ decimal.format(resultadoFinal.getMediaDCG())+
 			": NumKeywords: "+resultadoFinal.getKeywordsConsolidadas().split(" ").length+
-			": Media Num_Docs: "+ decimal.format(resultadoFinal.getMediaNumDocs()));
+			": Media Num_Docs: "+ decimal.format(resultadoFinal.getMediaNumDocs());
 			
+			System.out.println(medidasCategoria);
+			resultados.add(medidasCategoria);
+		
 			keywords.add("Categoria "+ resultadoFinal.getCategoria()+" Keywords:"+ resultadoFinal.getKeywordsConsolidadas());
 		}
 		
+		resultados.add("");
 		System.out.println("");
 		for (String linha : keywords) {
+			resultados.add(linha);
 			System.out.println(linha);
 		}
+		
+		return resultados;
 	}
 	
 	public Double getMediaCG() {
